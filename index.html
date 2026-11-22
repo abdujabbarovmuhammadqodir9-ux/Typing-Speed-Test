@@ -1,12 +1,60 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Typing Speed Test</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="row" id="result"></div>
+
+    <div class="container">
+        <h1>⌨ Typing Speed Test</h1>
+        <p class="subtitle">Проверь свою скорость печати!</p>
+
+        <div class="stats">
+            <div class="stat">
+                <h2 id="time">60</h2>
+                <p>Время (сек)</p>
+            </div>
+
+            <div class="stat">
+                <h2 id="speed">0</h2>
+                <p>Знаки/мин</p>
+            </div>
+
+            <div class="stat">
+                <h2 id="accuracy">100%</h2>
+                <p>Точность</p>
+            </div>
+
+            <div class="stat">
+                <h2 id="errors">0</h2>
+                <p>Ошибки</p>
+            </div>
+        </div>
+
+        <div class="text-box" id="textDisplay"></div>
+
+        <textarea
+            id="input"
+            placeholder="Начни печатать здесь..."
+            disabled
+        ></textarea>
+
+        <button id="startBtn">Начать тест</button>
+        <button id="restartBtn">Начать заново</button>
+
+        <h2 class="chart-title">График ошибок</h2>
+        <div class="chart-container">
+            <canvas id="errorChart"></canvas>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
-</html><scriptydyy src="script.js"></scriptydy>
+</html>
