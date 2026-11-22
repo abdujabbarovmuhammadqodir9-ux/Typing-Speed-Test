@@ -1,172 +1,152 @@
-let object = {
-    name: 'John',
-    age: 30,
-    city: 'New York',
-    email: 'tkc80@example.com',
-    phone: '123-456-7890',
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-let num = 0;
-console.log(object.name); // John
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #141e30, #243b55);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+}
 
-let numbers = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
-console.log(numbers[4]); // 5
+.container {
+    background: white;
+    width: 100%;
+    max-width: 850px;
+    padding: 35px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
 
-let fruits = ['apple', 'banana', 'orange', 'grape', 'kiwi'];
-console.log(fruits[2]); // orange
+h1 {
+    color: #243b55;
+    margin-bottom: 10px;
+}
 
-let users = [
-    
-    {
-        name: 'John',
-        age: 30,
-        city: 'Bishkek',
-        phone: '123-456-7890',
-        avatar: 'https://randomuser.me/api/portraits/men/19.jpg'
-    },
-    {
-        name: 'Jane',
-        age: 25,
-        city: 'Osh',
-        phone: '098-765-4321',
-        avatar: 'https://randomuser.me/api/portraits/women/22.jpg'
-    },
-    {
-        name: 'Bob',
-        age: 35,
-        city: 'Naryn',
-        phone: '555-555-5555',
-        avatar: 'https://randomuser.me/api/portraits/men/22.jpg'
-    },
-    {
-        name: 'Alice',
-        age: 40,
-        city: 'Talas',
-        phone: '777-777-7777',
-        avatar: 'https://randomuser.me/api/portraits/women/27.jpg'
-    },
-    {
-        name: 'Mike',
-        age: 45,
-        city: 'Jalal-abad',
-        phone: '999-999-9999',
-        avatar: 'https://randomuser.me/api/portraits/men/3.jpg'
-    },
-    {
-        name: 'Emily',
-        age: 50,
-        city: 'Chyi',
-        phone: '111-111-1111',
-        avatar: 'https://randomuser.me/api/portraits/women/3.jpg'
-    },
-    {
-        name: 'David',
-        age: 55,
-        city: 'Ysyk-Kol',
-        phone: '222-222-2222',
-        avatar: 'https://randomuser.me/api/portraits/men/4.jpg'
+.subtitle {
+    color: #777;
+    margin-bottom: 30px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.stat {
+    background: #f0f4fa;
+    padding: 18px 8px;
+    border-radius: 12px;
+}
+
+.stat h2 {
+    color: #2563eb;
+    font-size: 28px;
+}
+
+.stat p {
+    color: #666;
+    font-size: 13px;
+    margin-top: 7px;
+}
+
+.text-box {
+    background: #f5f7fb;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: left;
+    font-size: 19px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    min-height: 130px;
+}
+
+.text-box span.correct {
+    color: #16a34a;
+}
+
+.text-box span.incorrect {
+    color: #dc2626;
+    background: #fee2e2;
+}
+
+textarea {
+    width: 100%;
+    height: 110px;
+    padding: 15px;
+    border: 2px solid #d1d5db;
+    border-radius: 12px;
+    font-size: 17px;
+    resize: none;
+    outline: none;
+    margin-bottom: 20px;
+}
+
+textarea:focus {
+    border-color: #2563eb;
+}
+
+button {
+    padding: 13px 25px;
+    margin: 5px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+#restartBtn {
+    background: #64748b;
+}
+
+#restartBtn:hover {
+    background: #475569;
+}
+
+.chart-title {
+    margin: 30px 0 15px;
+    color: #243b55;
+}
+
+.chart-container {
+    width: 100%;
+    height: 250px;
+}
+
+#result {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
     }
-];
-function searchUser() {
-    let input = document.getElementById('input1').value.toLowerCase();
-    let filteredUsers = users.filter(user =>
-        user.name.toLowerCase().includes(input)
-    );
 
-    console.log(filteredUsers);
-
-    let filteredText = '';
-
-    for (let i = 0; i < filteredUsers.length; i++) {
-        filteredText += `<div class="card">
-            <img src="${filteredUsers[i].avatar}" alt="${filteredUsers[i].name}">
-            <h2>${filteredUsers[i].name}</h2>
-            <p>Age: ${filteredUsers[i].age}</p>
-            <p>City: ${filteredUsers[i].city}</p>
-            <p>Phone: ${filteredUsers[i].phone}</p>
-        </div>`;
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    document.getElementById('result').innerHTML = filteredText;
-}
-
-let inputElement = document.getElementById('input1');
-inputElement.addEventListener('input', searchUser);
-
-
-function searchUserByPhone() {
-    let input = document.getElementById('input2').value;
-
-    let filteredUsers = users.filter(user =>
-        user.phone.includes(input)
-    );
-
-    let filteredText = '';
-
-    for (let i = 0; i < filteredUsers.length; i++) {
-        filteredText += `<div class="card">
-            <img src="${filteredUsers[i].avatar}" alt="${filteredUsers[i].name}">
-            <h2>${filteredUsers[i].name}</h2>
-            <p>Age: ${filteredUsers[i].age}</p>
-            <p>City: ${filteredUsers[i].city}</p>
-            <p>Phone: ${filteredUsers[i].phone}</p>
-        </div>`;
+    .text-box {
+        font-size: 16px;
     }
-
-    document.getElementById('result').innerHTML = filteredText;
 }
-
-let phoneInputElement = document.getElementById('input2');
-phoneInputElement.addEventListener('input', searchUserByPhone);
-
-
-function filterUsersByCity() {
-    let city = document.getElementById('input3').value.toLowerCase();
-
-    let filteredUsers = users.filter(user =>
-        user.city.toLowerCase().includes(city)
-    );
-
-    let filteredText = '';
-
-    if (city === 'all') {
-        filteredText = text;
-    } else {
-        for (let i = 0; i < filteredUsers.length; i++) {
-            filteredText += `<div class="card">
-                <img src="${filteredUsers[i].avatar}" alt="${filteredUsers[i].name}">
-                <h2>${filteredUsers[i].name}</h2>
-                <p>Age: ${filteredUsers[i].age}</p>
-                <p>City: ${filteredUsers[i].city}</p>
-                <p>Phone: ${filteredUsers[i].phone}</p>
-            </div>`;
-        }
-    }
-
-    document.getElementById('result').innerHTML = filteredText;
-}
-
-let ageInputElement = document.getElementById('input3');
-ageInputElement.addEventListener('change', filterUsersByCity);
-
-console.log(users[2].name, users[2].phone); // Bob
-
-// let nums = '';
-// for (let i = 0; i < 100; i++) {
-//     nums += i + '<br>';
-// }
-// document.getElementById('nums').innerHTML = nums;
-
-let text = '';
-
-for (let i = 0; i < users.length; i++) {
-    text += `<div class="card">
-        <img src="${users[i].avatar}" alt="${users[i].name}">
-        <h2>${users[i].name}</h2>
-        <p>Age: ${users[i].age}</p>
-        <p>City: ${users[i].city}</p>
-        <p>Phone: ${users[i].phone}</p>
-    </div>`;
-}
-
-document.getElementById('result').innerHTML = text;
