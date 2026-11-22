@@ -1,152 +1,214 @@
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+const texts = [
+    "Программирование помогает создавать интересные приложения и современные технологии.",
+    "Скорость печати зависит от практики, внимательности и правильного расположения пальцев.",
+    "Каждый день можно узнавать что-то новое и развивать полезные навыки.",
+    "Информационные технологии меняют современный мир и открывают новые возможности.",
+    "Успех приходит к тем, кто постоянно учится и не боится решать сложные задачи."
+];
+
+const textDisplay = document.getElementById("textDisplay");
+const input = document.getElementById("input");
+
+const timeElement = document.getElementById("time");
+const speedElement = document.getElementById("speed");
+const accuracyElement = document.getElementById("accuracy");
+const errorsElement = document.getElementById("errors");
+
+const startBtn = document.getElementById("startBtn");
+const restartBtn = document.getElementById("restartBtn");
+const result = document.getElementById("result");
+
+let currentText = "";
+let timeLeft = 60;
+let timer = null;
+let started = false;
+let finished = false;
+let totalErrors = 0;
+let errorHistory = [];
+let chart = null;
+
+function randomText() {
+    return texts[Math.floor(Math.random() * texts.length)];
 }
 
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #141e30, #243b55);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 25px;
+function loadText() {
+    currentText = randomText();
+
+    textDisplay.innerHTML = "";
+
+    currentText.split("").forEach(char => {
+        const span = document.createElement("span");
+        span.textContent = char;
+        textDisplay.appendChild(span);
+    });
 }
 
-.container {
-    background: white;
-    width: 100%;
-    max-width: 850px;
-    padding: 35px;
-    border-radius: 20px;
-    text-align: center;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-}
+function createChart() {
+    const ctx = document.getElementById("errorChart");
 
-h1 {
-    color: #243b55;
-    margin-bottom: 10px;
-}
-
-.subtitle {
-    color: #777;
-    margin-bottom: 30px;
-}
-
-.stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-.stat {
-    background: #f0f4fa;
-    padding: 18px 8px;
-    border-radius: 12px;
-}
-
-.stat h2 {
-    color: #2563eb;
-    font-size: 28px;
-}
-
-.stat p {
-    color: #666;
-    font-size: 13px;
-    margin-top: 7px;
-}
-
-.text-box {
-    background: #f5f7fb;
-    padding: 25px;
-    border-radius: 12px;
-    text-align: left;
-    font-size: 19px;
-    line-height: 1.8;
-    margin-bottom: 20px;
-    min-height: 130px;
-}
-
-.text-box span.correct {
-    color: #16a34a;
-}
-
-.text-box span.incorrect {
-    color: #dc2626;
-    background: #fee2e2;
-}
-
-textarea {
-    width: 100%;
-    height: 110px;
-    padding: 15px;
-    border: 2px solid #d1d5db;
-    border-radius: 12px;
-    font-size: 17px;
-    resize: none;
-    outline: none;
-    margin-bottom: 20px;
-}
-
-textarea:focus {
-    border-color: #2563eb;
-}
-
-button {
-    padding: 13px 25px;
-    margin: 5px;
-    border: none;
-    border-radius: 10px;
-    background: #2563eb;
-    color: white;
-    font-size: 15px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-button:hover {
-    background: #1d4ed8;
-    transform: translateY(-2px);
-}
-
-#restartBtn {
-    background: #64748b;
-}
-
-#restartBtn:hover {
-    background: #475569;
-}
-
-.chart-title {
-    margin: 30px 0 15px;
-    color: #243b55;
-}
-
-.chart-container {
-    width: 100%;
-    height: 250px;
-}
-
-#result {
-    margin-top: 20px;
-    font-size: 20px;
-    font-weight: bold;
-    color: #2563eb;
-}
-
-@media (max-width: 600px) {
-    .container {
-        padding: 20px;
+    if (chart) {
+        chart.destroy();
     }
 
-    .stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    chart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: [],
+            datasets: [{
+                label: "Количество ошибок",
+                data: [],
+                borderColor: "#ef4444",
+                backgroundColor: "rgba(239,68,68,0.15)",
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+}
 
-    .text-box {
-        font-size: 16px;
+function startTest() {
+    if (started || finished) return;
+
+    started = true;
+    input.disabled = false;
+    input.focus();
+
+    startBtn.disabled = true;
+
+    timer = setInterval(() => {
+        timeLeft--;
+
+        timeElement.textContent = timeLeft;
+
+        updateStats();
+
+        if (timeLeft <= 0) {
+            endTest();
+        }
+    }, 1000);
+}
+
+function updateStats() {
+    const typed = input.value;
+
+    let correct = 0;
+    let errors = 0;
+
+    const spans = textDisplay.querySelectorAll("span");
+
+    spans.forEach((span, index) => {
+        const char = typed[index];
+
+        span.className = "";
+
+        if (char == null) {
+            return;
+        }
+
+        if (char === currentText[index]) {
+            span.classList.add("correct");
+            correct++;
+        } else {
+            span.classList.add("incorrect");
+            errors++;
+        }
+    });
+
+    totalErrors = errors;
+
+    const elapsed = 60 - timeLeft;
+
+    const speed = elapsed > 0
+        ? Math.round((typed.length / elapsed) * 60)
+        : 0;
+
+    const accuracy = typed.length > 0
+        ? Math.round((correct / typed.length) * 100)
+        : 100;
+
+    speedElement.textContent = speed;
+    accuracyElement.textContent = accuracy + "%";
+    errorsElement.textContent = errors;
+}
+
+function updateChart() {
+    const elapsed = 60 - timeLeft;
+
+    if (elapsed % 5 === 0) {
+        chart.data.labels.push(elapsed + " сек");
+        chart.data.datasets[0].data.push(totalErrors);
+        chart.update();
     }
 }
+
+function endTest() {
+    clearInterval(timer);
+
+    finished = true;
+    input.disabled = true;
+    startBtn.disabled = true;
+
+    updateStats();
+
+    result.textContent =
+        "Тест завершён! Твоя скорость: " +
+        speedElement.textContent +
+        " знаков/мин.";
+
+    updateChart();
+}
+
+input.addEventListener("input", () => {
+    if (!started || finished) return;
+
+    updateStats();
+
+    const typed = input.value;
+
+    if (typed.length >= currentText.length) {
+        loadText();
+        input.value = "";
+    }
+});
+
+startBtn.addEventListener("click", startTest);
+
+restartBtn.addEventListener("click", () => {
+    clearInterval(timer);
+
+    timeLeft = 60;
+    started = false;
+    finished = false;
+    totalErrors = 0;
+
+    input.value = "";
+    input.disabled = true;
+
+    startBtn.disabled = false;
+
+    timeElement.textContent = 60;
+    speedElement.textContent = 0;
+    accuracyElement.textContent = "100%";
+    errorsElement.textContent = 0;
+
+    result.textContent = "";
+
+    loadText();
+    createChart();
+});
+
+loadText();
+createChart();
